@@ -13,11 +13,8 @@ Description: If storing and easily accessing multiple R objects are
   with collections as close to interactive as possible.
 License: GPL3
 Imports: 
-    defer,
-	digest,
-	dplyr,
-	lazyeval,
-	parallel
-Suggests: testthat,
-    knitr
+Suggests:
+  testthat,
+  knitr,
+  rmarkdown
 VignetteBuilder: knitr

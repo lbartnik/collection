@@ -1,0 +1,145 @@
+---
+title: "Storing Objects in a Collection"
+author: "Łukasz A. Bartnik"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Storing Objects in a Collection}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+library(collection)
+library(knitr)
+
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
+
+
+
+## Basics
+
+First we create a collection and store an object in it.
+
+```{r}
+x <- collection('objects')
+store(x, iris)
+```
+
+
+Let's a summary of `x` and then list objects stored there:
+
+```{r}
+print(x)
+show(x)
+```
+
+
+Finally, let's read that object back:
+
+```{r}
+restore(x, 'id')
+```
+
+
+## Multiple Objects
+
+```{r}
+library(tibble)
+library(magrittr)
+library(dplyr)
+```
+
+
+### A Linear Model: Manual Steps
+
+What if we have multiple objects we'd like to work with? What if they
+share a common data layout and while we explore models with a few of
+them, we'd later like to apply or verify the best-model-so-far on all
+of them?
+
+A good example could be **time series**. Let's say we have a data set
+with the main time series plus a number of other secondary series that
+we suspect could be handy in making prediction with the main one. How
+can we approach that?
+
+First, we load these data sets into a collection. Let's say there is a
+number of files whose names define an `id` for each time series.
+
+```{r}
+input_files <-
+  system.file('time-series', package = 'collection') %>%
+  list.files('.*rds', full.names = TRUE)
+
+multiple <- collection('multiple')
+
+lapply(input_files, function (path) {
+  data <- readRDS(path) %>% tibble::tibble
+  id   <- tools::file_path_sans_ext(basename(path))
+  store(multiple, data, data_id = id)
+})
+```
+
+Now that we have all these files in a collection we can try and build
+a predictive model for one of them. At this point we don't have a
+strong preference so we take the first object in the collection.
+
+```{r}
+data <- restore(multiple[1])
+```
+
+Instead of using advance time series techniques we will start with
+a simple linear model - we will curate the input data set, however,
+by adding a few lags. Then we split the data set into training and
+testing sets, and build the first model.
+
+```{r}
+data %<>%
+  mutate(x_1 = lag(x, 1), x_2 = lag(x, 2), x_3 = lag(x, 3))
+
+train <- head(data, -1)
+test  <- tail(data, 1)
+
+m <- lm(x ~ x_1 + x_2 + x_3 + a + b + c, data = train)
+```
+
+Let's see how well it does on the testing set.
+
+```{r}
+test$pred_x <- predict(m, data = test)
+with(test, abs(pred_x - x)/x)
+```
+
+We can wrap it up in a single function whose parameters are the input
+data set and the split row.
+
+```{r}
+build_and_test_simple_lm <- function (data, n)
+{
+  data %<>%
+    mutate(x_1 = lag(x, 1), x_2 = lag(x, 2), x_3 = lag(x, 3))
+
+  train <- head(data, -n)
+  test  <- tail(data, n)
+
+  m <- lm(x ~ x_1 + x_2 + x_3 + a + b + c, data = train)
+  test$pred_x <- predict(m, data = test[, 1])
+  
+  with(test, abs(pred_x - x)/x)
+}
+```
+
+
+### Linear Model: Run on all Data Sets
+
+What if we would like to see how does our model do on the rest of the
+data sets? Nothing simpler than that!
+
+```{r}
+results <-
+  multiple %>%
+  lapply(build_and_test_simple_lm, n = 1)
+
+results
+```

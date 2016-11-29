@@ -139,7 +139,7 @@ data sets? Nothing simpler than that!
 ```{r}
 results <-
   multiple %>%
-  lapply(build_and_test_simple_lm, n = 1)
+  apply(build_and_test_simple_lm, n = 1)
 
 results
 ```

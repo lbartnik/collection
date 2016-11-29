@@ -1,0 +1,60 @@
+---
+title: "Collection: API"
+author: "Łukasz A. Bartnik"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Collection: API}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+library(collection)
+library(knitr)
+
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
+
+
+## Basic verbs
+
+```{r}
+c <- collection('objects')
+```
+
+All functions described below as their first argument take one of:
+
+* a `collection`
+* a `clist`
+
+
+`filter()` accepts a number of conditional expressions to be evaluated
+on tags. It filters out objects for which at least one expression
+evaluates to `FALSE`.
+
+```{r}
+filter
+```
+
+
+`arrange()` changes the order of objects.
+
+```{r}
+arrange
+```
+
+
+`apply()` calls a given function on each object. It returns a computational
+task that by default is evaluated in the current session.
+
+```{r}
+apply
+```
+
+
+`compute()` evaluates a computation task.
+
+```{r}
+compute(task, where)
+```

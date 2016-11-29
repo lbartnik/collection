@@ -6,15 +6,18 @@ Date: 2015-02-03
 Author: Lukasz A. Bartnik <l.bartnik@gmail.com>
 Maintainer: Lukasz A. Bartnik <l.bartnik@gmail.com>
 Description: If storing and easily accessing multiple R objects are
-  important in whatever you are doing, this package can speed-up these
-  tasks. It implements a simple, file-system based object storage,
-  and a number of functions to distribute computational tasks performed
-  on these objects across a cluster. Plus a few methods to make working
-  with collections as close to interactive as possible.
+    important in whatever you are doing, this package can speed-up these
+    tasks. It implements a simple, file-system based object storage,
+    and a number of functions to distribute computational tasks performed
+    on these objects across a cluster. Plus a few methods to make working
+    with collections as close to interactive as possible.
 License: GPL3
-Imports: 
+Imports:
+    digest,
+    tools
 Suggests:
-  testthat,
-  knitr,
-  rmarkdown
+    testthat,
+    knitr,
+    rmarkdown
 VignetteBuilder: knitr
+RoxygenNote: 5.0.1

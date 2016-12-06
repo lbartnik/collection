@@ -4,7 +4,7 @@
 \alias{sample_time_series}
 \title{Produce a sample collection.}
 \usage{
-sample_time_series(n = 10, len = 84, dir = tempdir())
+sample_time_series(n = 10, len = 84, dir = tempdir(), seed = 1)
 }
 \arguments{
 \item{n}{Number of objects to generate.}

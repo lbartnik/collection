@@ -40,24 +40,25 @@ restore_() # is intended for programmatic use
 First we create a collection and store an object in it.
 
 ```{r}
-x <- collection('objects')
-store(x, iris)
+C <- collection('first collection')
+store(C, iris)
 ```
 
 
-Let's a summary of `x` and then list objects stored there:
+Let's see the summary of `C` and then list objects stored there:
 
 ```{r}
-print(x)
-show(x)
+summary(C)
+print(C)
+show(C)
 ```
 
 
 Finally, let's read that object back:
 
 ```{r}
-restore(x, name == 'iris')
-restore(x, 'id')
+restore(C, name == 'iris')
+restore(C, 'id')
 ```
 
 
@@ -91,8 +92,9 @@ Let's now apply a function on each object in this collection:
 ```{r}
 do(ts_col, function (obj) {
   
-})
+}) # TODO should return result wrapped in a pretty-printer; a clist?
 ```
+
 
 What if we only want to apply this function on a subset of objects?
 
@@ -122,5 +124,33 @@ lm(x ~ a + b + c, data = ts)
 ts_col %>%
   do(function (obj) {
     lm(x ~ a + b + c, data = obj)
+  }) %>%
+  store(C, name = 'models') # TODO store method for clist; differs from store.default
+```
+
+
+## Multiple objects - a Table
+
+We have now seen a way to process multiple objects using a collection.
+Since there are no limits to what objects are stored in a colletion, one
+can look at them as parts of a _table_, where _tags_ are just indices
+used to group that table into sub-tables.
+
+Let's store the _iris_ data set a three separate groups/subsets with
+_Species_ being the grouping attribute/column/tag.
+
+```{r}
+tables < collection('tables')
+
+iris %>%
+  group_by(Species) %>%
+  do({
+    obj <- select(., -Species)
+    tag <- .$Species[1]
+    store(tables, obj, name = 'iris', species = tag)
   })
 ```
+
+
+
+

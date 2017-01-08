@@ -1,4 +1,6 @@
+#' @rdname collecion
 #' @export
+#' 
 collection <- function (name, dir = getwd())
 {
   # returns an object of the base class that simply points to the storage
@@ -32,11 +34,11 @@ is_collection <- function (x) inherits(x, 'collection')
 #' 
 #' @return Object identifier.
 #' 
-#' @rdname store
-#' @name store
+#' @rdname collecion
+#' @name store.collection
 #' @export
 #' 
-store <- function (col, object, ..., id = id_of(object), .auto_tags = TRUE)
+store.collection <- function (col, object, ..., id = id_of(object), .auto_tags = TRUE)
 {
   stopifnot(is_collection(col))
   
@@ -49,28 +51,16 @@ store <- function (col, object, ..., id = id_of(object), .auto_tags = TRUE)
 }
 
 
-#' @description \code{restore} reads an object back from a
-#' \code{\link{collection}}.
-#' 
-#' @param .simplify If only one object can be restored do not wrap it in
-#'        a \code{list}.
-#'
-#' @rdname store
+
+#' @rdname collection
 #' @export
 #' 
-restore <- function (col, ..., .simplify = TRUE)
-{
-  UseMethod("restore")
-}
-
-
-#' @rdname store
-#' @export
-#' 
-restore.collection <- function (col, ..., .simplify = TRUE)
+restore.collection <- function (col, id, .simplify = TRUE)
 {
   stopifnot(is_collection(col))
   stopifnot(is.character(id))
+
+  # TODO handle the missing(id) case
 
   res <- lapply(id, function (id) read_object(col$storage, id))
 
@@ -78,3 +68,34 @@ restore.collection <- function (col, ..., .simplify = TRUE)
     return(res[[1]])
   res
 }
+
+
+
+#' @export
+do.collection <- function (col, fun, ids, ..., lazy = FALSE)
+{
+  # TODO handle lazy
+
+  if (missing(ids)) {
+    ids <- list_ids(col$storage)
+  }
+
+  run_fun(col$storage, ids, function (obj, tags) fun(obj, ...))
+}
+
+
+
+
+run_fun <- function (storage, id, fun)
+{
+  stopifnot(is_storage(storage))
+  stopifnot(is.character(id))
+  stopifnot(is.function(fun))
+
+  lapply(ids, function (id) {
+    obj  <- read_object(storage, id)
+    tags <- read_tags(storage, id)
+    fun(obj, tags)
+  })
+}
+

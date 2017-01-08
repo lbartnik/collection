@@ -28,15 +28,37 @@ clist_collection <- function (clist)
 }
 
 
-
-
-#' @rdname store
+#' @description \code{store.clist()} stores the whole \emph{clist} in
+#' collection \code{col}.
+#' 
+#' @rdname clist
 #' @export
 #' 
-restore.clist <- function (col, .simplify = TRUE)
+store.clist <- function (clist, col)
 {
-  clist <- col
-  col   <- clist_collection(col)
-  restore(col, as.character(clist))
+  
 }
+
+
+#' @rdname clist
+#' @export
+#' 
+restore.clist <- function (clist, .simplify = TRUE)
+{
+  # no `id` here because if subset is needed one can use filter or
+  # the bracket operator
+
+  restore(clist_collection(clist), as.character(clist))
+}
+
+
+#' @export
+do.clist <- function (clist, fun, ..., lazy = FALSE)
+{
+  do(clist_collection(clist), as.character(clist), fun, ..., lazy = lazy)
+}
+
+
+
+
 

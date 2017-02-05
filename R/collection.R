@@ -1,8 +1,10 @@
 #' @rdname collecion
 #' @export
 #' 
-collection <- function (name, dir = getwd())
+collection <- function (name, storage_factory = filesystem(getwd()), create = FALSE)
 {
+  stopifnot(is_storage(storage))
+
   # returns an object of the base class that simply points to the storage
   # (all objects)
   #
@@ -11,7 +13,7 @@ collection <- function (name, dir = getwd())
   # plus storage handle as its attribute
   
   # TODO add one more level of directories: objects, meta, graph of creation
-  storage <- filesystem_storage(file.path(dir, into_file_name(name)))
+  storage <- storage_factory(dir, name, create)
   structure(list(storage = storage), class = 'collection')
 }
 

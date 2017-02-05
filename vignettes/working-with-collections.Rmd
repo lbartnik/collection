@@ -1,0 +1,77 @@
+---
+title: "Working with a Colletion of Objects"
+author: "Łukasz A. Bartnik"
+date: "February 4, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Create a collection
+
+It's really a handle, the collection exists in the storage even when the
+handle is no longer accessible.
+
+Create a collection handle:
+  * name of this collection in `some collection`
+  * it is stored in the local filesystem
+  * it is stored in the current working directory
+  
+
+```{r}
+handle <- collection('some collection', storage = filesystem(getwd()))
+
+handle <- collection('some collection')
+```
+
+
+
+# Store objects in a collection
+
+
+`store(object, handle, name)`
+
+  * store `object`
+  * in collection pointed to by `handle`
+  * and group them under name `name`
+
+methods for `object` of class:
+  * `list` - store each element separately, group them under `name`
+  * `clist` - as above
+  * any other - treat as a single object
+
+
+
+```{r}
+
+energy <- collection('energy')
+
+list(ts1, ts2, ts3) %>% store(energy, 'data')
+
+list(lm(...), lm(...), lm(...)) %>% store(energy, 'models')
+
+```
+
+
+
+# Apply a function on (all) objects
+
+`capply(clist, function)`
+
+`capply(handle, function)`
+
+
+```{r}
+energy <- collection('energy')
+
+energy %>% capply(function(...){})
+
+energy %>% filter(tag = value) %>% capply(function(...){})
+
+```
+
+
+

@@ -2,15 +2,14 @@
 #' 
 #' @param n Number of objects to generate.
 #' @param len Number of samples in each series.
-#' @param dir Parent directory for the new collection.
+#' @param seed Seed for the random number generator.
 #' 
-#' @return A \code{\link{collection}} object.
+#' @return A list of time series data frames.
 #' @export
 #' @rdname examples
 #' 
-sample_time_series <- function (n = 10, len = 84, dir = tempdir(), seed = 1)
+sample_time_series <- function (n = 10, len = 84, seed = 1)
 {
-  c <- collection('time_series', dir = dir)
 
   set.seed(seed)
   lapply(seq(n), function (i) {
@@ -20,7 +19,6 @@ sample_time_series <- function (n = 10, len = 84, dir = tempdir(), seed = 1)
       c = cumsum(rnorm(len))
     )
     data$x <- with(data, .1*a + .2*b + 0.3*c) + rnorm(len)
-    store(c, data, no = i)
   })
   
   return(c)

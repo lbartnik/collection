@@ -22,9 +22,9 @@ Create a collection handle:
   
 
 ```{r}
-handle <- collection('some collection', storage = filesystem(getwd()))
+handle <- collection('some collection', create = TRUE, storage = filesystem(getwd()))
 
-handle <- collection('some collection')
+handle <- collection('some collection', create = TRUE)
 ```
 
 
@@ -69,9 +69,28 @@ energy <- collection('energy')
 
 energy %>% capply(function(...){})
 
-energy %>% filter(tag = value) %>% capply(function(...){})
+energy %>% filter(tag = value) %>% capply(function(...){}, .lazy = FALSE)
 
+# single process
+res <- energy %>% filter(tag = value) %>% capply(function(...){}) %>% local
+
+# multiple processes
+res <- energy %>% filter(tag = value) %>% capply(function(...){}) %>% local(cores = 4)
+
+# pass results back to the collection, potentially might speed-up the computation
+energy %>% filter(tag = value) %>% capply(function(...){}) %>% store(energy, 'attempt #3')
 ```
 
+
+
+# Extra settings
+
+```{r}
+options(colletions.cores = 4)
+
+# return immediately; might not work if result is to be returned
+# into a variable, in the session from which it is called
+options(colletions.async = TRUE)
+```
 
 

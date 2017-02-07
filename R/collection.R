@@ -1,7 +1,7 @@
 #' @rdname collecion
 #' @export
 #' 
-collection <- function (name, storage_factory = filesystem(getwd()), create = FALSE)
+collection <- function (name, create = FALSE, storage_factory = filesystem(getwd()))
 {
   stopifnot(is_storage(storage))
 

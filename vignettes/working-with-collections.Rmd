@@ -94,3 +94,31 @@ options(colletions.async = TRUE)
 ```
 
 
+
+# Accessing elements of a collection
+
+
+```{r}
+# lookup: first groups, then single objects
+energy$data %>%
+  filter(tag = value) %>%
+  capply(function(...){}) %>%
+  store(energy, 'attempt #4')
+
+# name containing special characters
+energy[["data #2"]] %>%
+  filter(tag = value) %>%
+  capply(function(...){}) %>%
+  store(energy, 'attempt #5')
+
+# lookup: only groups
+energy$group$data %>%
+  filter(tag = value) %>%
+  capply(function(...){}) %>%
+  store(energy, 'attempt #6')
+
+# lookup: only objects
+energy$object$id_of_this_object %>%
+  store(energy, 'just this object')
+```
+

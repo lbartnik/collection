@@ -1,0 +1,54 @@
+---
+title: "Intro"
+author: "Lukasz A. Bartnik"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to Collections}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+library(collection)
+library(knitr)
+
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
+
+
+# Quick run-through
+
+## Creating a collection
+
+```{r}
+handle <- collection('some collection', create = TRUE)
+```
+
+
+## Loading data into a collection
+
+```{r}
+list(ts1, ts2, ts3, ts4, ts5) %>% store('data', handle)
+```
+
+
+## Processing data in a collection
+
+```{r}
+# TODO could be simply store('models') if original collection is tracked through the pipeline
+handle %>% capply(function(...){ lm(...) }) %>% store('models', handle)
+```
+
+
+## Looking at the models
+
+```{r}
+# TODO 'here' means 'restore'
+handle %>% filter(group = 'models') %>% here
+```
+
+
+
+# Actual working code
+

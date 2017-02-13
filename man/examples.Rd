@@ -4,17 +4,17 @@
 \alias{sample_time_series}
 \title{Produce a sample collection.}
 \usage{
-sample_time_series(n = 10, len = 84, dir = tempdir(), seed = 1)
+sample_time_series(n = 10, len = 84, seed = 1)
 }
 \arguments{
 \item{n}{Number of objects to generate.}
 
 \item{len}{Number of samples in each series.}
 
-\item{dir}{Parent directory for the new collection.}
+\item{seed}{Seed for the random number generator.}
 }
 \value{
-A \code{\link{collection}} object.
+A list of time series data frames.
 }
 \description{
 Produce a sample collection.

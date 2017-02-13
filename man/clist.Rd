@@ -2,9 +2,15 @@
 % Please edit documentation in R/clist.R
 \name{clist}
 \alias{clist}
+\alias{restore.clist}
+\alias{store.clist}
 \title{Create a \emph{collection list}.}
 \usage{
 clist(col)
+
+\method{store}{clist}(clist, col)
+
+restore.clist(clist, .simplify = TRUE)
 }
 \arguments{
 \item{col}{A \code{collection} or another \code{clist} (?)}
@@ -16,5 +22,8 @@ A \code{clist}.
 A \code{clist} is a container of references to objects stored in a
 \code{collection}. When used with the \emph{verb} functions
 (\code{filter}, \code{arrange}, \code{apply})
+
+\code{store.clist()} stores the whole \emph{clist} in
+collection \code{col}.
 }
 

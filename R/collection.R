@@ -38,10 +38,10 @@ length.collection <- function (x) length(list_ids(x$storage))
 #' @name store.collection
 #' @export
 #'
-store.collection <- function (col, object, group, ...)
+store.collection <- function (col, object, group = NULL, ...)
 {
   stopifnot(is_collection(col))
-  if (!missing(group)) stopifnot(is_nonempty_character(group))
+  if (!is.null(group)) stopifnot(is_nonempty_character(group))
 
   id <- id_of(object)
   if (find_id(col$storage, id)) {
@@ -50,12 +50,52 @@ store.collection <- function (col, object, group, ...)
 
 
   tags <- list(...)
-  tags$group <- if (!missing(group)) group else id
+  tags$group <- if (!is.null(group)) group else id
   # TODO auto_tags
 
   write_object(col$storage, object, id)
   write_tags(col$storage, tags, id)
 
   id
+}
+
+
+restore.collection <- function (col, id, ...)
+{
+  stopifnot(is_collection(col))
+  stopifnot(missing(id) || find_id(col$storage, id))
+
+  tags <- list(...)
+  if (!missing(id) && (length(tags) > 0)) {
+    stop("use either `id` or tags to restore from a collection",
+         call. = FALSE)
+  }
+
+  if (!missing(id)) {
+    return (list(
+      object = read_object(col$storage, id),
+      tags   = read_tags(col$storage, id)
+    ))
+  }
+  else {
+    # TODO search for ids
+    stop("not implemented yet")
+  }
+}
+
+
+
+# ---- private collection API ----
+
+
+search_ids <- function (col, tags)
+{
+  stopifnot(is_collection(col))
+
+  lapply(list_ids(col$storage), function (id) {
+    tags <- read_tags(col$storage, id)
+    # TODO verify whether object matches the filter
+    stop("not implemented yet")
+  })
 }
 

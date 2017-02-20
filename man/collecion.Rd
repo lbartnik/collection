@@ -7,7 +7,7 @@
 \usage{
 collection(name, create = FALSE, storage = filesystem(getwd()))
 
-\method{store}{collection}(col, object, group, ...)
+\method{store}{collection}(col, object, group = NULL, ...)
 }
 \arguments{
 \item{col}{A \code{\link{collection}}.}

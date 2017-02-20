@@ -6,11 +6,11 @@
 \alias{store.list}
 \title{Store data in a collection.}
 \usage{
-store(x, y, group, ...)
+store(x, y, group = NULL, ...)
 
-\method{store}{default}(obj, collection, group, ...)
+\method{store}{default}(obj, collection, group = NULL, ...)
 
-\method{store}{list}(obj, collection, group, ...)
+\method{store}{list}(obj, collection, group = NULL, ...)
 }
 \arguments{
 \item{x}{Object (contents) or collection (destination).}
@@ -18,15 +18,17 @@ store(x, y, group, ...)
 \item{y}{Collection or object.}
 
 \item{group}{Optional group name, especially useful when storing
-multiple, related objets.}
+multiple (related) objets.}
+
+\item{...}{Optional tags.}
 
 \item{obj}{Object to be store.}
 
 \item{collection}{Collection to store \code{obj} in.}
 }
 \value{
-\code{store.list} returns a \emph{clist}, which is a handle to
-a set of objects.
+Each \code{store()} method returns a \emph{clist}, which is
+a handle to a set of objects in a \emph{collection}.
 }
 \description{
 If the first argument is a collection, the \emph{store} operation is
@@ -36,10 +38,10 @@ operation variant is chosen based on the object's class. E.g. a plain
 \code{list} will be broken down into \code{n} \emph{store} operations,
 one for each element of the list.
 
-The default \code{store} variant writes all data under
+The default \code{store()} variant writes all data under
 a single key (identifier).
 
-The \code{list} variant of the \code{store} method stores
-each element of the list under a separate key (identifier).
+The \code{list} variant of the \code{store()} method
+stores each element of the list under a separate key (identifier).
 }
 

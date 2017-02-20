@@ -9,7 +9,7 @@ empty_collection <- function (name = 'sample')
 }
 
 
-sample_collection <- function (name = 'sample')
+filled_collection <- function (name = 'sample')
 {
   handle <- empty_collection(name)
   lapply(seq(10), function(x) store(handle, seq(from = x, length.out = 10), 'data'))

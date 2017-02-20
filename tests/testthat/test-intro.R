@@ -23,11 +23,12 @@ test_that("load data", {
 
 
 test_that("process data", {
-  handle <- sample_collection('sample')
+  handle <- filled_collection('sample')
 
   values <- capply(handle, mean)
   expect_equal(length(handle), length(values))
-  expect_equal(values, seq(from = 5.5, by = 1, length.out = 10))
+  expect_equal(sort(unlist(values)),
+               seq(from = 5.5, by = 1, length.out = 10))
 })
 
 

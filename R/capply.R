@@ -18,9 +18,11 @@ capply.collection <- function (col, fun, ...) {
 capply.clist <- function (cl, fun, ...) {
   # TODO this should go into here(); this method simply prepares
   #      the computational task; possibly could be based on defer
+
+  # TODO use options: collection.here = TRUE or FALSE
   lapply(cl, function (id) {
-    pair <- restore(clist_collection(cl), id)
-    result <- try(fun(pair$object, pair$tags, ...))
+    pair <- restore(extract_collection(cl), id)
+    result <- try(fun(pair$object, ...))
   })
 }
 

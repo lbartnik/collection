@@ -16,16 +16,20 @@
 #' @param x Object (contents) or collection (destination).
 #' @param y Collection or object.
 #' @param group Optional group name, especially useful when storing
-#'              multiple, related objets.
+#'              multiple (related) objets.
+#' @param ... Optional tags.
+#'
+#' @return Each \code{store()} method returns a \emph{clist}, which is
+#' a handle to a set of objects in a \emph{collection}.
 #'
 #' @rdname store
 #' @export
 #'
-store <- function (x, y, group, ...) UseMethod("store")
+store <- function (x, y, group = NULL, ...) UseMethod("store")
 
 
 
-#' @description The default \code{store} variant writes all data under
+#' @description The default \code{store()} variant writes all data under
 #' a single key (identifier).
 #'
 #' @param obj Object to be store.
@@ -34,24 +38,25 @@ store <- function (x, y, group, ...) UseMethod("store")
 #' @rdname store
 #' @export
 #'
-store.default <- function (obj, collection, group, ...) {
+store.default <- function (obj, collection, group = NULL, ...) {
   store(collection, obj, group, ...)
 }
 
 
-#' @description The \code{list} variant of the \code{store} method stores
-#' each element of the list under a separate key (identifier).
-#'
-#' @return \code{store.list} returns a \emph{clist}, which is a handle to
-#' a set of objects.
+
+#' @description The \code{list} variant of the \code{store()} method
+#' stores each element of the list under a separate key (identifier).
 #'
 #' @rdname store
 #' @export
 #'
-store.list <- function (obj, collection, group, ...)
+store.list <- function (obj, collection, group = NULL, ...)
 {
   # if it's more than just a list (an object), store as a single entity
+  # but wa
   if (!identical(class(obj), 'list')) {
+    warning("because `obj` has a class other than `list` it is stored as a single object",
+            call. = FALSE)
     store(collection, obj, group, ...)
   }
   else {
@@ -60,4 +65,32 @@ store.list <- function (obj, collection, group, ...)
     })
   }
 }
+
+
+
+#' Restore an object.
+#'
+#' @param from Restore from collection, clist...
+#' @param id Restore object by its identifier.
+#' @param ... Restore object(s) by their tags.
+#'
+#' @export
+restore <- function (from, id, ...)
+{
+  UseMethod("restore")
+
+  if (length(list(...)) > 0) {
+    stop("search by tags is not implemented yet")
+  }
+}
+
+
+#' @export
+restore.default <- function (from, id, ...)
+{
+  stop("`from` of class ", paste(class(from), collapse = '::'),
+       " is not supported", call. = FALSE)
+}
+
+
 

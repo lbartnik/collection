@@ -20,6 +20,9 @@ capply.clist <- function (cl, fun, ...) {
   #      the computational task; possibly could be based on defer
 
   # TODO use options: collection.here = TRUE or FALSE
+
+  warning("returning results in a list", call. = FALSE)
+
   lapply(cl, function (id) {
     pair <- restore(extract_collection(cl), id)
     result <- try(fun(pair$object, ...))

@@ -30,7 +30,7 @@ test_that("load data", {
 test_that("process data", {
   handle <- filled_collection('sample')
 
-  values <- capply(handle, mean)
+  expect_warning(values <- capply(handle, mean))
   expect_equal(length(handle), length(values))
   expect_equal(sort(unlist(values)),
                seq(from = 5.5, by = 1, length.out = 10))

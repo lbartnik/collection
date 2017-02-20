@@ -63,7 +63,7 @@ store.list <- function (obj, collection, group = NULL)
   }
   else {
     lapply(obj, function (x) {
-      store(collection, x, group, ...)
+      store(collection, x, group)
     })
   }
 }

@@ -17,8 +17,13 @@ test_that("load data", {
   id <- store(iris, handle)
   files <- list.files(file.path(tempdir(), 'sample'), recursive = TRUE)
 
+  expect_length(id, 1)
   expect_true(paste0(id, '.rds') %in% basename(files))
   expect_true(paste0(id, '_tags.rds') %in% basename(files))
+
+  tags <- readRDS(file.path(handle$storage, grep("tags.rds", files, value = 1)))
+  expect_named(tags, 'group')
+  expect_equal(tags$group, id)
 })
 
 

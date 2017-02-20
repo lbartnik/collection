@@ -6,7 +6,7 @@
 \alias{store.list}
 \title{Store data in a collection.}
 \usage{
-store(x, ...)
+store(x, y, group, ...)
 
 \method{store}{default}(obj, collection, group, ...)
 
@@ -14,6 +14,11 @@ store(x, ...)
 }
 \arguments{
 \item{x}{Object (contents) or collection (destination).}
+
+\item{y}{Collection or object.}
+
+\item{group}{Optional group name, especially useful when storing
+multiple, related objets.}
 
 \item{obj}{Object to be store.}
 

@@ -3,7 +3,7 @@ context("intro samples")
 test_that("create a collection", {
   handle <- empty_collection()
   expect_true(dir.exists(handle$storage))
-  expect_length(handle, 1)
+  expect_length(handle, 0)
 
   handle <- sample_collection()
   expect_true(dir.exists(handle$storage))

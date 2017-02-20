@@ -1,3 +1,6 @@
+#' @export
+clist <- function () {}
+
 #' Create a \emph{collection list}.
 #'
 #' A \code{clist} is a container of references to objects stored in a

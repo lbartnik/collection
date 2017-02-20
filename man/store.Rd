@@ -10,7 +10,7 @@ store(x, y, group = NULL, ...)
 
 \method{store}{default}(obj, collection, group = NULL, ...)
 
-\method{store}{list}(obj, collection, group = NULL, ...)
+\method{store}{list}(obj, collection, group = NULL)
 }
 \arguments{
 \item{x}{Object (contents) or collection (destination).}
@@ -43,5 +43,7 @@ a single key (identifier).
 
 The \code{list} variant of the \code{store()} method
 stores each element of the list under a separate key (identifier).
+This method does not take any additional, single-object-level tags
+via \code{...}
 }
 

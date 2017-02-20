@@ -46,18 +46,20 @@ store.default <- function (obj, collection, group = NULL, ...) {
 
 #' @description The \code{list} variant of the \code{store()} method
 #' stores each element of the list under a separate key (identifier).
+#' This method does not take any additional, single-object-level tags
+#' via \code{...}
 #'
 #' @rdname store
 #' @export
 #'
-store.list <- function (obj, collection, group = NULL, ...)
+store.list <- function (obj, collection, group = NULL)
 {
   # if it's more than just a list (an object), store as a single entity
   # but wa
   if (!identical(class(obj), 'list')) {
     warning("because `obj` has a class other than `list` it is stored as a single object",
             call. = FALSE)
-    store(collection, obj, group, ...)
+    store(collection, obj, group)
   }
   else {
     lapply(obj, function (x) {

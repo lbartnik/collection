@@ -7,7 +7,7 @@
 \alias{store.clist}
 \title{Create a \emph{collection list}.}
 \usage{
-as_clist(col)
+as_clist(x, ...)
 
 is_clist(x)
 
@@ -16,7 +16,9 @@ is_clist(x)
 \method{restore}{clist}(clist, .simplify = TRUE)
 }
 \arguments{
-\item{col}{A \code{collection} or another \code{clist} (?)}
+\item{x}{Object to be coerced to a \code{clist}.}
+
+\item{...}{Other arguments, depending on type of \code{x}.}
 
 \item{x}{Object to be tested.}
 }

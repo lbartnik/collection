@@ -1,7 +1,10 @@
 # Methods from other packages forwarded in this package.
 
-
-#' @importFrom dplyr do
+#' @importFrom dplyr filter
 #' @export
-dplyr::do
+dplyr::filter
 
+
+#' @importFrom dplyr filter_
+#' @export
+dplyr::filter_

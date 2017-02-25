@@ -3,6 +3,8 @@
 \docType{import}
 \name{reexports}
 \alias{do}
+\alias{filter}
+\alias{filter_}
 \alias{reexports}
 \title{Objects exported from other packages}
 \description{
@@ -10,7 +12,7 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
-  \item{dplyr}{\code{\link[dplyr]{do}}, \code{\link[dplyr]{do}}}
+  \item{dplyr}{\code{\link[dplyr]{filter}}, \code{\link[dplyr]{filter_}}, \code{\link[dplyr]{do}}}
 }}
 \keyword{internal}
 

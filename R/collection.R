@@ -85,10 +85,15 @@ restore.collection <- function (col, id, ...)
 
 
 
-# ---- private collection API ----
 
-
-search_ids <- function (col, tags)
+#' Search for objects whose tags match filter(s).
+#'
+#' @param col A \code{collection} object.
+#' @param dots List of lazy-eval expressions.
+#'
+#' @return A vector of object identifiers.
+#'
+search_ids <- function (col, dots)
 {
   stopifnot(is_collection(col))
 
@@ -97,5 +102,30 @@ search_ids <- function (col, tags)
     # TODO verify whether object matches the filter
     stop("not implemented yet")
   })
+}
+
+
+# --- extra verbs ---
+
+
+#' Taps into \code{dplyr}'s filtering method.
+#'
+#' @param .data A \code{collection} object.
+#' @param ... Filtering expression.
+#' @param .dots A list of \code{lazyeval} expressions.
+#'
+#' @return A \code{clist} whose elements match the specified filter.
+#'
+#' @export
+#'
+filter_.collection <- function (.data, ..., .dots)
+{
+  stopifnot(is_collection(.data))
+  clist <- as_clist(.data)
+
+  # it only makes sense to implement search (filter) logic once and
+  # clist will need it much more often than collection
+  dots <- lazyeval::all_dots(.dots, ...)
+  filter_(clist, .dots = dots)
 }
 

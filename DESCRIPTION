@@ -15,6 +15,7 @@ License: GPL3
 Imports:
     digest,
     dplyr,
+    lazyeval,
     tools
 Suggests:
     testthat,

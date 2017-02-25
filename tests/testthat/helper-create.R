@@ -12,7 +12,9 @@ empty_collection <- function (name = 'sample')
 filled_collection <- function (name = 'sample')
 {
   handle <- empty_collection(name)
-  lapply(seq(10), function(x) store(handle, seq(from = x, length.out = 10), 'data'))
+  store_xy <- function(x, y) store(handle, seq(from = x, length.out = 10), paste0('data', y))
+  lapply(seq(5),   function(x) store_xy(x, 1))
+  lapply(seq(5)+5, function(x) store_xy(x, 2))
   handle
 }
 

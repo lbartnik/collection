@@ -37,3 +37,10 @@ test_that("process data", {
 })
 
 
+test_that("filter", {
+  handle <- filled_collection('sample')
+
+  g1 <- filter(handle, group == 'data1')
+  expect_s3_class(g1, 'clist')
+  expect_length(g1, 5)
+})

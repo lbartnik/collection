@@ -96,12 +96,18 @@ restore.collection <- function (col, id, ...)
 search_ids <- function (col, dots)
 {
   stopifnot(is_collection(col))
+  stopifnot(is.list(dots), inherits(dots, "lazy_dots"))
 
-  lapply(list_ids(col$storage), function (id) {
+  ids <- list_ids(col$storage)
+  ans <- lapply(ids, function (id) {
     tags <- read_tags(col$storage, id)
-    # TODO verify whether object matches the filter
-    stop("not implemented yet")
+    ans <- vapply(dots, function (lazy) {
+      isTRUE(lazyeval::lazy_eval(lazy, data = tags))
+    }, logical(1))
+    all(ans)
   })
+
+  ids[unlist(ans)]
 }
 
 

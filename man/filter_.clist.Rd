@@ -4,7 +4,7 @@
 \alias{filter_.clist}
 \title{Taps into \code{dplyr}'s filtering method.}
 \usage{
-filter_.clist(.data, ..., .dots)
+\method{filter_}{clist}(.data, ..., .dots)
 }
 \arguments{
 \item{.data}{A \code{clist} object.}

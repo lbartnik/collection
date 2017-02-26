@@ -4,7 +4,7 @@
 \alias{filter_.collection}
 \title{Taps into \code{dplyr}'s filtering method.}
 \usage{
-filter_.collection(.data, ..., .dots)
+\method{filter_}{collection}(.data, ..., .dots)
 }
 \arguments{
 \item{.data}{A \code{collection} object.}

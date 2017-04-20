@@ -1,20 +1,26 @@
-
-empty_collection <- function (name = 'sample')
+sample_path <- function (topdir = 'sample')
 {
-  # first make sure it doesn't exist
-  path <- file.path(tempdir(), name)
-  unlink(path, recursive = TRUE, force = TRUE)
+  file.path(tempdir(), topdir)
+}
 
-  collection(name, create = TRUE, storage = filesystem(tempdir()))
+empty_collection <- function (path = sample_path())
+{
+  stopifnot(require(storage))
+
+  # first make sure it doesn't exist
+  unlink(path, recursive = TRUE, force = TRUE)
+  collection(character(0), storage = storage::filesystem(path, create = TRUE))
 }
 
 
-filled_collection <- function (name = 'sample')
+sample_collection <- function (path = sample_path())
 {
-  handle <- empty_collection(name)
-  store_xy <- function(x, y) store(handle, seq(from = x, length.out = 10), paste0('data', y))
+  col <- empty_collection(path)
+
+  store_xy <- function(x, y) add(col, seq(from = x, length.out = 10))
   lapply(seq(5),   function(x) store_xy(x, 1))
   lapply(seq(5)+5, function(x) store_xy(x, 2))
-  handle
+
+  all_objects(col)
 }
 

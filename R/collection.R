@@ -1,117 +1,94 @@
+#' Create a collection.
+#'
+#' @param ... All values are concatenated and \code{unlist}ed into
+#'        a \code{character} vector of identifiers that must be present
+#'        in the \code{storage}.
+#' @param storage A \code{\link[storage]{storage}} object where actual
+#'        objects are stored.
+#'
 #' @rdname collecion
 #' @export
 #'
-collection <- function (name, create = FALSE, storage = filesystem(getwd()))
+#' @importFrom storage is_object_store os_exists
+#'
+collection <- function (..., storage)
 {
-  # returns an object of the base class that simply points to the storage
-  # (all objects)
-  #
-  # to point to a subset of objects a new class needs to be introduced:
-  # a "clist" - that is, a "collection list"; it will be a vector of IDs
-  # plus storage handle as its attribute
+  stopifnot(is_object_store(storage))
 
-  # TODO add one more level of directories: objects, meta, graph of creation
-  storage <- workspace(storage, name, create)
-  stopifnot(is_storage(storage))
+  ids <- unlist(list(...), recursive = TRUE)
+  stopifnot(is.character(ids), all(os_exists(storage, ids)))
 
-  structure(list(storage = storage), class = 'collection')
+  class(ids) <- 'collection'
+  attr(ids, 'storage') <- storage
+  ids
 }
 
 
+#' @rdname collecion
+#' @export
 is_collection <- function (x) inherits(x, 'collection')
 
 
+collection_storage <- function (x)
+{
+  stopifnot(is_collection(x))
+  attr(x, 'storage')
+}
+
+
+#' @rdname collecion
 #' @export
-length.collection <- function (x) length(list_ids(x$storage))
+as_collection <- function (x, ...) UseMethod("as_collection")
 
+#' @rdname collecion
+#' @export
+as_collection.default <- function (x, storage) {
+  stop('cannot cast ', class(x)[[1]], ' to collection', call. = FALSE)
+}
 
-#' Store objects in a collection and read them back.
-#'
-#' @param col A \code{\link{collection}}.
-#' @param obj Any object.
-#' @param group Store under this group name.
-#' @param ... Named tags (\code{store}) or additional parameters (\code{restore}).
-#'
-#' @return Object identifier.
+#' @description In the \code{as_collection} for the \code{object_store}
+#'              the \code{storage} parameter is ignored.
 #'
 #' @rdname collecion
-#' @name store.collection
 #' @export
-#'
-store.collection <- function (col, object, group = NULL, ...)
-{
-  stopifnot(is_collection(col))
-  if (!is.null(group)) stopifnot(is_nonempty_character(group))
+as_collection.object_store <- function (x, storage) {
+  collection(os_list(x), storage = x)
+}
 
-  id <- id_of(object)
-  if (find_id(col$storage, id)) {
-    warning("object already present in collection, not storing", call. = FALSE)
-  }
+#' @rdname collecion
+#' @export
+as_collection.character <- function (x, storage) {
+  collection(x, storage = storage)
+}
 
 
+
+#' @rdname collecion
+#' @export
+add <- function (col, object, ...) {
   tags <- list(...)
-  tags$group <- if (!is.null(group)) group else id
-  # TODO auto_tags
+  if (!all(nchar(names(tags)) > 0)) {
+    stop("all tags must be named", call. = FALSE)
+  }
 
-  write_object(col$storage, object, id)
-  write_tags(col$storage, tags, id)
-
-  id
+  add_(col, object, tags)
 }
 
 
-restore.collection <- function (col, id, ...)
-{
+#' @rdname collecion
+#' @export
+add_ <- function (col, object, tags, auto_tags = FALSE) {
   stopifnot(is_collection(col))
-  stopifnot(missing(id) || find_id(col$storage, id))
 
-  tags <- list(...)
-  if (!missing(id) && (length(tags) > 0)) {
-    stop("use either `id` or tags to restore from a collection",
-         call. = FALSE)
+  if (isTRUE(auto_tags)) {
+    stop('auto_tags not implemented yet', call. = FALSE)
+    # TODO extract automatic tags and make sure they don't overlap
+    #      with user-provided ones
   }
 
-  if (!missing(id)) {
-    return (list(
-      object = read_object(col$storage, id),
-      tags   = read_tags(col$storage, id)
-    ))
-  }
-  else {
-    # TODO search for ids
-    stop("not implemented yet")
-  }
+  id <- os_write(collection_storage(col), object, tags)
+  as_collection(c(col, id), storage = collection_storage(col))
 }
-
-
-
-
-#' Search for objects whose tags match filter(s).
-#'
-#' @param col A \code{collection} object.
-#' @param dots List of lazy-eval expressions.
-#'
-#' @return A vector of object identifiers.
-#'
-search_ids <- function (col, dots)
-{
-  stopifnot(is_collection(col))
-  stopifnot(is.list(dots), inherits(dots, "lazy_dots"))
-
-  ids <- list_ids(col$storage)
-  ans <- lapply(ids, function (id) {
-    tags <- read_tags(col$storage, id)
-    ans <- vapply(dots, function (lazy) {
-      isTRUE(lazyeval::lazy_eval(lazy, data = tags))
-    }, logical(1))
-    all(ans)
-  })
-
-  ids[unlist(ans)]
-}
-
-
-# --- extra verbs ---
 
 
 #' Taps into \code{dplyr}'s filtering method.

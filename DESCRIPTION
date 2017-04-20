@@ -13,10 +13,9 @@ Description: If storing and easily accessing multiple R objects are
     with collections as close to interactive as possible.
 License: GPL3
 Imports:
-    digest,
     dplyr,
     lazyeval,
-    tools
+    storage
 Suggests:
     testthat,
     knitr,
